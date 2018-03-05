@@ -1,0 +1,23 @@
+version: "3"
+services:
+  web:
+    image: nginx
+    links:
+      - rails_test
+    volumes:
+      - ./nginx/rails_test.conf:/etc/nginx/conf.d/rails_test.conf:ro
+      - ./nginx:/etc/nginx/ssl/
+      - ./log/nginx:/var/log/nginx/
+    ports:
+      - "80:80"
+
+  rails_test:
+    build: .
+    command: rails s -b 0.0.0.0 -p 4000 -e production
+    volumes:
+      - .:/app
+    ports:
+      - "4000:4000"
+    environment:
+      RAILS_SERVE_STATIC_FILES: KEEP
+      SECRET_KEY_BASE: KEEP
